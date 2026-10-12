@@ -24,11 +24,11 @@ This project implements frequent itemset mining and association rule learning ac
 ## Business Objectives
 
 1. **Transaction Reshaping & Matrix Encoding:** Transform long-format line-item transactions into a one-hot encoded boolean basket matrix across 5,000 orders and 60 SKUs.
-2. **Frequent Itemset Mining:** Identify all frequent itemsets exceeding the business threshold ($\text{min\_support} = 0.02$) using both Apriori and FP-Growth.
+2. **Frequent Itemset Mining:** Identify all frequent itemsets exceeding the business threshold (`min_support = 0.02`) using both Apriori and FP-Growth.
 3. **Algorithmic Benchmarking:** Compare Apriori (level-wise candidate generation) against FP-Growth (prefix-tree pattern growth) in terms of itemset completeness and execution speed.
-4. **Association Rule Generation:** Generate directed association rules ($A \to B$) with $\text{min\_lift} \ge 1.0$, evaluating rules through support, confidence, and lift.
+4. **Association Rule Generation:** Generate directed association rules (`A → B`) with `min_lift >= 1.0`, evaluating rules through support, confidence, and lift.
 5. **Empirical Validation:** Verify six pre-calibrated retail combos and a negative control pair against locked ground-truth specifications to prove signal integrity.
-6. **Operational Recommendations:** Translate top actionable rules ($\text{support} > 5\%$, $\text{lift} > 2.0$) into concrete warehouse slotting layouts, discounted bundle packs, and real-time app recommendations.
+6. **Operational Recommendations:** Translate top actionable rules (`support > 5%`, `lift > 2.0`) into concrete warehouse slotting layouts, discounted bundle packs, and real-time app recommendations.
 
 ---
 
@@ -99,26 +99,26 @@ The following items demonstrate the highest individual basket penetration across
 
 ### 1. Reshaping to Boolean Basket Matrix
 
-Because transaction logs store one item per line, items are grouped by `order_id` to form basket lists, then passed to `mlxtend.preprocessing.TransactionEncoder` to create a dense boolean matrix ($5,000 \times 60$) indicating presence (`True`) or absence (`False`).
+Because transaction logs store one item per line, items are grouped by `order_id` to form basket lists, then passed to `mlxtend.preprocessing.TransactionEncoder` to create a dense boolean matrix (5,000 × 60) indicating presence (`True`) or absence (`False`).
 
 ### 2. Core Association Metrics
 
 | Metric | Formula | Business Interpretation |
 |---|:---:|---|
-| **Support** | $\text{Support}(A \to B) = P(A \cap B) = \frac{|\text{Orders containing both } A \text{ and } B|}{|\text{Total Orders}|}$ | The baseline popularity of the itemset across all orders. |
-| **Confidence** | $\text{Confidence}(A \to B) = P(B \mid A) = \frac{\text{Support}(A \cup B)}{\text{Support}(A)}$ | Given that a customer placed $A$ in their basket, what is the probability that they also added $B$? |
-| **Lift** | $\text{Lift}(A \to B) = \frac{\text{Confidence}(A \to B)}{\text{Support}(B)} = \frac{P(A \cap B)}{P(A) \cdot P(B)}$ | The factor by which purchasing $A$ increases the likelihood of buying $B$ compared to independent random chance. $\text{Lift} > 1$ confirms positive association. |
+| **Support** | `P(A and B) = Orders with both A & B / Total Orders` | The baseline popularity of the item combination across all orders. |
+| **Confidence** | `P(B \| A) = Orders with both A & B / Orders with A` | Given that a customer bought A, how likely are they to also buy B? |
+| **Lift** | `Confidence(A → B) / Support(B)` | Factor by which buying A increases the likelihood of buying B compared to random chance. Lift > 1 indicates positive association. |
 
 ---
 
 ## Algorithmic Comparison: Apriori vs. FP-Growth
 
-Both algorithms were benchmarked on the identical $5,000 \times 60$ dataset at $\text{min\_support} = 0.02$:
+Both algorithms were benchmarked on the identical 5,000 × 60 dataset at `min_support = 0.02`:
 
 | Dimension | Apriori Algorithm | FP-Growth (Frequent Pattern Growth) |
 |---|---|---|
 | **Underlying Strategy** | Level-wise candidate generation & testing | Divide-and-conquer using an FP-Tree structure |
-| **Database Passes** | Multiple scans (one per candidate size $k$) | Exactly 2 scans to construct the FP-tree |
+| **Database Passes** | Multiple scans (one per candidate size k) | Exactly 2 scans to construct the FP-tree |
 | **Memory Footprint** | Low to moderate for small catalogs | Higher initial tree memory; fast pattern recursion |
 | **Frequent Itemsets Found** | **256** | **256** |
 | **Support Discrepancies** | **0** (Exact match) | **0** (Exact match) |
@@ -126,9 +126,9 @@ Both algorithms were benchmarked on the identical $5,000 \times 60$ dataset at $
 
 ### Breakdown of Frequent Itemsets by Size
 
-$$\text{Total Frequent Itemsets} = 256$$
+> **Total Frequent Itemsets Mined:** `256`
 
-| Itemset Length ($k$) | Count | Example Itemset |
+| Itemset Length (k) | Count | Example Itemset |
 |:---:|:---:|---|
 | **1-itemsets** | 60 | `{White Bread 400g}` (Support: 25.46%) |
 | **2-itemsets** | 78 | `{Toned Milk 1L, White Bread 400g}` (Support: 23.84%) |
@@ -142,7 +142,7 @@ $$\text{Total Frequent Itemsets} = 256$$
 
 ## Association Rules & The "High-Lift Trap"
 
-From 256 frequent itemsets, `mlxtend.frequent_patterns.association_rules` mined **980 valid rules** at $\text{min\_lift} \ge 1.0$.
+From 256 frequent itemsets, `mlxtend.frequent_patterns.association_rules` mined **980 valid rules** at `min_lift >= 1.0`.
 
 ### The Statistical Gotcha: Compound High-Lift Trap
 
@@ -153,7 +153,7 @@ When ranking purely by lift, the top rules achieve values up to **26.85**:
 These compound rules occur when two distinct, strong 2-item planted patterns (e.g. Tea-Time and Personal Care) co-occur in the same basket. While mathematically striking, their low support (~100 baskets out of 5,000) makes them fragile and operationally niche.
 
 **Actionable Rule Filter:** To isolate commercially viable rules, we apply the threshold:
-$$\text{Support} > 0.05 \quad (5\%) \quad \text{AND} \quad \text{Lift} > 2.0$$
+> **Actionable Filtering Criteria:** `support > 0.05` (5% support) **AND** `lift > 2.0`
 
 This filter isolates **42 actionable rules** representing high-volume, strong-affinity customer behaviors.
 
@@ -186,7 +186,7 @@ This filter isolates **42 actionable rules** representing high-volume, strong-af
 
 The project specification establishes six locked ground-truth product affinities. Our notebook tested observed metrics against these benchmarks:
 
-| Pattern Name | Rule ($A \to B$) | Exp. Supp | Obs. Supp | Exp. Conf | Obs. Conf | Exp. Lift | Obs. Lift | Validation Status |
+| Pattern Name | Rule (A → B) | Exp. Supp | Obs. Supp | Exp. Conf | Obs. Conf | Exp. Lift | Obs. Lift | Validation Status |
 |---|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | **Breakfast Combo** | `Toned Milk 1L -> White Bread 400g` | 23.84% | **23.84%** | 93.86% | **93.86%** | 3.69 | **3.69** | **PASS** |
 | **Thali Staples** | `Basmati Rice 5kg -> Toor Dal 1kg` | 15.34% | **15.34%** | 77.40% | **77.40%** | 3.74 | **3.74** | **PASS** |
@@ -195,18 +195,18 @@ The project specification establishes six locked ground-truth product affinities
 | **Tea-Time** | `Instant Coffee 100g -> Choco Cookies 150g`| 15.20% | **15.20%** | 85.88% | **85.88%** | 4.84 | **4.84** | **PASS** |
 | **Personal Care Restock** | `Hand Sanitizer 200ml -> Face Wash 100ml` | 13.18% | **13.18%** | 79.30% | **79.30%** | 5.05 | **5.05** | **PASS** |
 
-$$\textbf{Validation Score: 6 / 6 Patterns Confirmed (100\% Accuracy)}$$
+> **Validation Score: 6 / 6 Patterns Confirmed (100% Accuracy)**
 
 ![Six Planted Association Patterns Validation](outputs/figures/planted_patterns_lift.png)
 
 ### 2. Negative Control Check: Statistical Significance Proof
 
 To demonstrate that the mined rules are not spurious statistical noise, we evaluated an intentionally unrelated pair across categories:
-$$\text{Banana 1kg} \longrightarrow \text{Shampoo 340ml}$$
+**Evaluated Control Pair:** `Banana 1kg → Shampoo 340ml`
 
 - **Co-occurring Baskets:** 11 out of 5,000
-- **Observed Support:** **0.22%** ($0.0022$)
-- **Minimum Support Threshold:** **2.00%** ($0.0200$)
+- **Observed Support:** **0.22%** (0.0022)
+- **Minimum Support Threshold:** **2.00%** (0.0200)
 - **Result:** **PASS** — The pair failed to clear the support hurdle and was discarded, proving zero false-positive leakage.
 
 ---
@@ -250,17 +250,17 @@ Leverage high lift and confidence to create pre-packaged product kits on the app
 
 Trigger non-intrusive modal prompts when an antecedent item is placed into the cart:
 
-- **Trigger:** Cart contains `Toned Milk 1L` $\longrightarrow$ **Prompt:** "Add White Bread 400g for fresh breakfast?" (**93.9% confidence**)
-- **Trigger:** Cart contains `Cola 750ml` $\longrightarrow$ **Prompt:** "Add Potato Chips 90g?" (**91.2% confidence**)
-- **Trigger:** Cart contains `Poha 500g` $\longrightarrow$ **Prompt:** "Need Ghee 500ml for cooking?" (**86.5% confidence**)
-- **Trigger:** Cart contains `Hand Sanitizer 200ml` $\longrightarrow$ **Prompt:** "Restock Face Wash 100ml?" (**79.3% confidence**)
+- **Trigger:** Cart contains `Toned Milk 1L` → **Prompt:** "Add White Bread 400g for fresh breakfast?" (**93.9% confidence**)
+- **Trigger:** Cart contains `Cola 750ml` → **Prompt:** "Add Potato Chips 90g?" (**91.2% confidence**)
+- **Trigger:** Cart contains `Poha 500g` → **Prompt:** "Need Ghee 500ml for cooking?" (**86.5% confidence**)
+- **Trigger:** Cart contains `Hand Sanitizer 200ml` → **Prompt:** "Restock Face Wash 100ml?" (**79.3% confidence**)
 
 ### 4. Experimentation & Governance Framework
 
 - **Controlled A/B Rollout:** Deploy recommendations across 6 test dark stores while maintaining 6 stores as unprompted control groups.
 - **Key Metrics to Track:**
   - **AOV (Average Order Value):** Target +8% to +12% lift.
-  - **Basket Depth:** Increment in units per basket from 5.38 to $\ge 5.8$.
+  - **Basket Depth:** Increment in units per basket from 5.38 to ≥ 5.8.
   - **Cannibalization Rate:** Ensure high-margin items are not displaced by low-margin accessories.
   - **Pick Time:** Monitor dark-store fulfillment duration to ensure pickers remain within the 10-minute target.
 
@@ -349,10 +349,10 @@ Run all cells from top to bottom. Results will be recomputed and automatically s
 ## Dependencies
 
 - **Python:** 3.10 or higher
-- **pandas:** $\ge 2.0.0$ (Data manipulation and aggregation)
-- **mlxtend:** $\ge 0.23.0$ (TransactionEncoder, Apriori, FP-Growth, association_rules)
-- **matplotlib:** $\ge 3.7.0$ (Figure generation and visualization)
-- **seaborn:** $\ge 0.12.0$ (Statistical charting)
+- **pandas:** >= 2.0.0 (Data manipulation and aggregation)
+- **mlxtend:** >= 0.23.0 (TransactionEncoder, Apriori, FP-Growth, association_rules)
+- **matplotlib:** >= 3.7.0 (Figure generation and visualization)
+- **seaborn:** >= 0.12.0 (Statistical charting)
 - **jupyter / nbclient:** For notebook execution
 
 ---
