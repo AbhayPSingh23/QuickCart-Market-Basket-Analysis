@@ -1,0 +1,17 @@
+{
+  "transaction_rows": 26878,
+  "unique_orders": 5000,
+  "unique_skus": 60,
+  "unique_stores": 12,
+  "date_min": "2026-11-01",
+  "date_max": "2026-11-30",
+  "mean_basket_size": 5.3756,
+  "median_basket_size": 5.0,
+  "min_basket_size": 1,
+  "max_basket_size": 16,
+  "reference_frequent_itemsets": 256,
+  "reference_association_rules": 980,
+  "actionable_rules_support_ge_0_05_lift_ge_2": 42,
+  "planted_patterns_verified": 6,
+  "note": "Frequent-itemset and association-rule CSVs in data/reference are supplied reference outputs. The notebook recomputes them from raw transactions when dependencies are installed."
+}

@@ -1,0 +1,7 @@
+Pattern,Rule,Expected support (%),Observed support (%),Expected confidence (%),Observed confidence (%),Expected lift,Observed lift,Status
+Breakfast Combo,Toned Milk 1L -> White Bread 400g,23.84,23.84,93.86,93.86,3.69,3.69,PASS
+Thali Staples,Basmati Rice 5kg -> Toor Dal 1kg,15.34,15.34,77.4,77.4,3.74,3.74,PASS
+Snack-Drink Combo,Potato Chips 90g -> Cola 750ml,19.74,19.74,90.38,90.38,4.18,4.18,PASS
+Ghar Breakfast,Ghee 500ml -> Poha 500g,14.68,14.68,86.05,86.05,5.07,5.07,PASS
+Tea-Time,Instant Coffee 100g -> Choco Cookies 150g,15.2,15.2,85.88,85.88,4.84,4.84,PASS
+Personal Care Restock,Hand Sanitizer 200ml -> Face Wash 100ml,13.18,13.18,79.3,79.3,5.05,5.05,PASS

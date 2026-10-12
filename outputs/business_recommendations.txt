@@ -1,0 +1,16 @@
+QUICKCART BUSINESS RECOMMENDATIONS
+These are ideas based on historical associations, not guaranteed sales outcomes.
+
+Shelf placement and bundle ideas:
+- Toned Milk 1L + White Bread 400g | support: 23.8% | confidence: 93.9% | lift: 3.69
+- Potato Chips 90g + Cola 750ml | support: 19.7% | confidence: 90.4% | lift: 4.18
+- Toor Dal 1kg + Cooking Oil 1L | support: 15.4% | confidence: 74.7% | lift: 3.74
+- Basmati Rice 5kg + Toor Dal 1kg | support: 15.3% | confidence: 77.4% | lift: 3.74
+- Choco Cookies 150g + Instant Coffee 100g | support: 15.2% | confidence: 85.6% | lift: 4.84
+
+App cross-sell ideas:
+- If a basket contains Toned Milk 1L, consider recommending White Bread 400g (confidence: 93.9%, lift: 3.69).
+- If a basket contains White Bread 400g, consider recommending Toned Milk 1L (confidence: 93.6%, lift: 3.69).
+- If a basket contains Cola 750ml, consider recommending Potato Chips 90g (confidence: 91.2%, lift: 4.18).
+- If a basket contains Potato Chips 90g, consider recommending Cola 750ml (confidence: 90.4%, lift: 4.18).
+- If a basket contains Poha 500g, consider recommending Ghee 500ml (confidence: 86.5%, lift: 5.07).
